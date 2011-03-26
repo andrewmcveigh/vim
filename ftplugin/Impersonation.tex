@@ -1,0 +1,207 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\begin{document}
+\section{Infrastructure}
+\subsection{Level 0}
+\includegraphics[width=1\linewidth]{infrastructure}
+\subsection{Level 1: Interfaces}
+\includegraphics[width=1\linewidth]{level_1-interfaces}
+\subsection{Level 2: Models}
+\includegraphics[clip,trim=4mm 0mm 0mm 0mm,width=1.1\linewidth]{dbml}
+\subsection{Technology Outline}
+The package contains the following projects/folders:
+\subsubsection{\_database}
+Version controlled backup of the current database layout
+\subsubsection{\_docs}
+Documentation
+\subsubsection{\_hook-scripts}
+Scripts run on various version control hook events
+\subsubsection{HelpdeskService}
+The service that checks the mailbox of the Helpdesk user, and monitors the Helpdesk telephone numbers for incoming calls.
+\subsubsection{InstallHelpdesk}
+The installer for the HelpdeskService.
+\subsubsection{MailService.Test}
+Defunct
+\subsubsection{Messaging}
+WCF Web Service used for sending email and writing to event logs.
+\subsubsection{Messaging.Test}
+Unit tests for Messaging
+\subsubsection{Models}
+Data models, Linq to SQL Classes, Data repository, Helpers and Reports.
+\subsubsection{Models.Test}
+Unit tests for Models
+\subsubsection{NetworkServiceLibrary}
+Library used for checking emails and phone calls from Exchange Web Services and TAPI.
+\subsubsection{NetworkServiceLibrary.Test}
+Unit tests for NetworkServiceLibrary
+\subsubsection{Output}
+Output folder for library DLLs to quicken compilation speeds (not sure that it works though!).
+\subsubsection{Resources}
+Folder containing 3rd party libraries
+\subsubsection{ScheduleTimer}
+Defunct
+\subsubsection{TapiExchange}
+WCF Web service used for making TAPI calls.
+\subsubsection{TapiWrapper}
+Defunct
+\subsubsection{TestResults}
+Default folder for unit test results.
+\subsubsection{TestUtils}
+Useful classes and helpers for writing tests.
+\subsubsection{web}
+The ASP.NET MVC 2 web interface to the helpdesk.
+\subsubsection{web.Tests}
+Unit tests for web.
+\section{Exchange Web Services}
+\subsection{Impersonation}
+If the mail server is new, has been changed, or updated, the Exchange user needs a special permission setting.\\
+\\*First the Service Nodes need to be shown:\\
+\indent AD Sites \& Services $\rightarrow$ View $\rightarrow$ Show Service Nodes\\
+\\*Then, the setting is found at:\\
+\indent AD Sites \& Services
+\\*\indent\indent $\rightarrow$ Services
+\\*\indent\indent $\rightarrow$ Microsoft Exchange
+\\*\indent\indent $\rightarrow$ DOMAIN\_NAME
+\\*\indent\indent $\rightarrow$ Administrative Groups
+\\*\indent\indent $\rightarrow$ Exchange Administrative Group
+\\*\indent\indent $\rightarrow$ Servers
+\\*\indent\indent $\rightarrow$ NEW\_MAIL\_SERVER\_NAME
+\\*\indent\indent $\rightarrow$ ``right click''
+\\*\indent\indent $\rightarrow$ Properties
+\\*\indent\indent $\rightarrow$ Security
+\\*\indent\indent $\rightarrow$ Advanced
+\\*\indent\indent $\rightarrow$ Add
+\\*\indent\indent $\rightarrow$ ``find desired user''
+\\*\indent\indent $\rightarrow$ ``near bottom of list'' Exchange Web Services Impersonation
+
+\section{Deployment}
+Deployment occurs automatically\footnote{The server hosting the HelpdeskService MUST NOT have the ``Services.msc'' dialog running when the repository is deployed.} when the MASTER mercurial branch is pushed to, using the ``incoming'' hook. The version control server ``versions'' handles the deployment.\\
+\subsection{Deployment Process}
+The deployment process has three stages:
+\begin{itemize}
+  \item Tracks Commits
+  \item Deploys Web
+  \item Deploys Service
+\end{itemize}
+It is called with the ``incoming'' hook calling the script ``track\_and\_deploy.sh''. This script in turn calls the ``deploy.sh'' script, which calls ``deploy\_web.sh'' followed by ``deploy\_service.sh''.
+\subsubsection{Track Commits}
+\label{sec:trackerintegration}
+The Helpdesk is feature/bug/chore tracked on ``pivotaltracker.com''. Upon pushing to the mercurial repository hosted on ``versions'', a command is sent to ``pivotaltracker.com'' to update the project automatically. Certain syntax must be used in the commit message for this to work. The syntax specification can be found at https://www.pivotaltracker.com/help/api?version=v3\\\#scm\_post\_commit\_message\_syntax.
+\subsubsection{Deploy Web}
+\begin{enumerate}
+  \item Mounts the //web.interel.local/sites/helpdesk folder
+  \item Clears the temp folder used if present
+  \item Runs ``hg  archive -r tip -I 'web/*' /tmp/helpdesk''.
+    This exports the ``web'' directory from the ``tip'' of the
+    repository to ``/tmp/helpdesk''.
+  \item Runs ``sed'' against the ``Web.config'' file to remove
+    settings relating to the ``debugging database''.
+  \item ``Rsyncs'' the ``/tmp/helpdesk'' with the mounted folder.
+  \item Unmounts the folder.
+\end{enumerate}
+\subsubsection{Deploy Service}
+\begin{enumerate}
+  \item Mounts the //web.interel.local/services folder
+  \item Stops the HelpdeskService on the server, remotely using 
+    ``winexe/winexec''.
+  \item Uninstalls the HelpdeskService\footnote{This is the point
+    that the ``Services.msc'' dialog must be closed at,
+    otherwise the service will not uninstall properly.} using 
+    ``winexe''.
+  \item Waits a few seconds for the service to uninstall, then
+    attempts to delete the service's files. It will usually
+    fail to delete all the files on the first attempt, so a
+    second wait, followed by a second delete command are
+    issued.
+  \item The files are cleared, exported and sed-ed, as per the
+    method used for the Web deployment.
+  \item The files are then copied over to the mounted folder
+    using ``cp''.
+  \item The service is re-installed.
+  \item The service is then re-started.
+  \item The folder is unmounted.
+\end{enumerate}
+\subsection{Committing Without Deploying}
+Local mercurial commits are recommended for minor unstable versions, merging back to the master branch when they become stable. It is also recommended that the cloned copies are kept in a synchronised service such as ``Dropbox'' for backup and availability purposes.
+
+\section{Web/UI}
+\subsection{Markup/HTML}
+The web/UI is employing the default view-engine of ASP.NET MVC 2 to generate markup. Using strict views when possible, passing a model to a view and rendering a view based on the model passed. Using the philosophy of ``fat models, skinny views'', the views are left purposefully sparse and minimal.
+\subsection{Cascading Style Sheets}
+To assist in writing better and quicker CSS, we are using ``SASS'', the CSS extension. The current version of SASS is version 3, although the majority of files in this project are still using SASS 2 syntax. There is no need to update the syntax until a section is updated as the SASS 2 syntax will still compile with a SASS 3 compiler.
+\subsection{Scripting/JavaScript}
+The JavaScript in this project is written using the jQuery Library. We also employ a custom structural ``framework'' to aid the writing and organisation of JavaScript files, and to help maintain the JavaScript object model. The lightweight ``compiler'' reads a directory of scripts, builds/combines, and optionally minimizes a directory tree of JavaScript files.\\
+\\*The JavaScript object model created by the ``compiler'' will resemble the folder structure, and filenames of the directory tree it is built from.\\
+\\*For instance:
+\lstset{
+  literate={~} {$\sim$}{1}, % set tilde as a literal (no process)
+  basicstyle=\ttfamily      % Code font
+}
+\begin{lstlisting}
+  |~Scripts
+    |~Controllers
+      |-!Controller.js
+      |-InventoryController.js
+      |-TicketsController.js
+    |+DOM
+    |+Models
+\end{lstlisting}
+Would be compiled (not minimised) to something like: % Should use minted/pygments for syntax highlighting?
+\begin{lstlisting}
+  (function($) { 
+    $.Scripts = new function() {
+      this.Controllers = new function() {
+        this._Controller = function() {
+        };
+        this.InventoryController = function() {
+        };
+        this.TicketsController = function() {
+        };
+      };
+      this.DOM = new function() {
+      };
+      this.Models = new function() {
+      };
+    };
+  })
+\end{lstlisting}
+Which is loaded, by the browser, into the JavaScript object model:
+\begin{lstlisting}
+  |~$: function(selector, context) // The jQuery object
+    |~Scripts: Object
+      |~Controllers: Object
+        |+TicketsController: Object
+        |+InventoryController: Object
+        |+_Controller: function()
+      |+DOM: Object
+      |+Models: Object
+\end{lstlisting}
+    
+
+\subsection{Server Side}
+The server side code of the ``Web'' project is using the following technology:
+\begin{itemize}
+  \item ASP.NET MVC 2
+  \item Linq
+  \item Linq to SQL (employed in the ``Models'' library)
+  \item C\# 3.0
+  \item Microsoft Reports
+\end{itemize}
+
+\section{Testing}
+The project is currently using the Microsoft Testing Framework built into Visual Studio. We are considering to move to the NUnit Testing Framework, as:
+\begin{itemize}
+  \item There is more support
+  \item It is open source
+  \item It seems to run much faster (major point)
+\end{itemize}
+It is estimated that over half of the testable\footnote{Code that is not directly linked to markup generation, or .NET framework code.} code is currently covered by unit tests.
+
+\section{Project Feature, Chore \& Bug Tracking}
+The project uses the feature/chore/bug tracking of the ``Software as a Service'' (SAAS) product ``Pivotal Tracker'' (\url{http://www.pivotaltracker.com/}). The tracker is an ``agile project management tool that enables real time collaboration around a shared, prioritized backlog''. The tracker is also tied in to the projects version-control/deployment system. The integration is outlined in Section \ref{sec:trackerintegration}.
+
+\end{document}
