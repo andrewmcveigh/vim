@@ -1,3 +1,22 @@
+set rtp+=~/.vim/vundle.git/
+call vundle#rc()
+
+" My Bundles
+Bundle 'snipMate'
+Bundle 'Conque-Shell'
+Bundle 'rails.vim'
+Bundle 'LaTeX-Suite-aka-Vim-LaTeX'
+Bundle 'cocoa.vim'
+Bundle 'reload.vim'
+Bundle 'slimv.vim'
+Bundle 'SuperTab-continued.'
+Bundle 'jQuery'
+Bundle 'jslint.vim'
+Bundle 'andrewmcveigh/Liquid-Carbon'
+Bundle 'andrewmcveigh/vim-customizations'
+Bundle 'andrewmcveigh/vimclojure.bundle'
+Bundle 'andrewmcveigh/Command-T'
+
 set autowrite                   " autosave before make/change buffer
 set softtabstop=4               " default tabstop width 4
 set shiftwidth=4                " default shift width 4
@@ -17,7 +36,9 @@ set modeline                    " enable modelines
 set exrc			" enable per-directory .vimrc files
 set secure			" disable unsafe commands in local .vimrc files
 set scrolloff=5                 " scroll offset 5 lines, I.E., keep 5 lines (minimum) above/below cursor
+set tags=tags;/
 set visualbell
+
 colorscheme liquidcarbon        " theme = liquidcarbon
 syntax on                       " syntax highlighting on
 filetype plugin indent on       " filetype indent on
@@ -59,17 +80,15 @@ au BufRead,BufNewFile *.js set ft=javascript.jquery
 " VimClojure Settings
 let vimclojure#WantNailgun = 1
 if os == "Linux"
-  let vimclojure#NailgunClient = $HOME . "/Dropbox/Config/dotfiles/.vim/vimclojure-nailgun-client/ubuntu10.10/ng"
+  let vimclojure#NailgunClient = $HOME . "/Dropbox/Config/dotfiles/.vim/bundle/vim-customizations/vimclojure-nailgun-client/ubuntu10.10/ng"
 elseif os == "Darwin"
-  let vimclojure#NailgunClient = $HOME . "/Dropbox/Config/dotfiles/.vim/vimclojure-nailgun-client/ng"
+  let vimclojure#NailgunClient = $HOME . "/Dropbox/Config/dotfiles/.vim/bundle/vim-customizations/vimclojure-nailgun-client/ng"
 endif
 let vimclojure#HighlightBuiltins = 1
 let vimclojure#ParenRainbow = 1
 let vimclojure#DynamicHighlighting = 1
 let vimclojure#SplitPos = "right"
 let vimclojure#SplitSize = 60
-
-echo $CLOJURE_SOURCE_DIRS
 
 
 " Supertab settings
@@ -127,13 +146,6 @@ nnoremap <LEADER>t :CommandT<CR>
 " Vim will ignore the following file/directory patterns
 set wildignore+=lib/*,*.jar,*.war,*aspnet_client*,*.cache,*.dll,*.exe,*obj/*,*bin/*,*.jpg,*.png,*.swf,*.gif,*.bmp,*.pem,*.crt,*.keystore,*classes/*,*build/*,*dist/*,%temp%*
 
-function! s:GenSvcProxy()
-    let url = input("Enter URL of service: ")
-    let namespace = input("Enter namespace for proxy class: ")
-    echo system("genrefs " . namespace . " ". url)
-endfunction
-command! GenSvcProxy call <SID>GenSvcProxy()
-
 function! s:NailGunStart()
     echo system("ng &")
 endfunction
@@ -148,29 +160,6 @@ function! s:NailGunStop()
     endif
 endfunction
 command! NailGunStop call <SID>NailGunStop()
-
-
-" C# compiler on
-" setup C# building
-if !exists("autocommands_loaded")
-  let autocommands_loaded = 1
-  autocmd BufNewFile,BufRead *.cs compiler devenv
-  autocmd BufNewFile,BufRead *.aspx compiler devenv
-  autocmd BufNewFile,BufRead *.ascx compiler devenv
-  autocmd BufNewFile,BufRead *.rdlc compiler devenv
-  map <F5> :make<CR>
-  map <F6> :!nunit-remote<CR>
-endif
-
-function! s:Clean()
-    echo system("msbuild-remote clean")
-endfunction
-command! Clean call <SID>Clean()
-
-function! s:Rebuild()
-    echo system("msbuild-remote rebuild")
-endfunction
-command! Rebuild call <SID>Rebuild()
 
 function! s:ToCssHex(a)
 ruby << EOF
@@ -189,7 +178,7 @@ if expand('~') != getcwd()
         exe 'source' ".vimrc"
     endif
 endif
-au BufRead,BufNewFile */helpdesk/*/* set tags+=../tags
+
 
 function! Refresh_hiccup()
     if &modified
