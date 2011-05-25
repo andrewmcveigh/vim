@@ -49,14 +49,14 @@ vnoremap <LEADER>hh4 "zdi[<C-R>z]<ESC>vi]"zdi"<C-R>z"<ESC>%a:h4 <ESC>F[i <ESC>l%
 let os = substitute(system('uname'), "\n", "", "")
 if os == "Linux"
     " Do Linux-specific stuff.
-    inoremap <C-(> (
-    inoremap <C-)> (<esc><right>%a)<esc>%a
-    inoremap <C-]>[ [
-    inoremap <C-]>] [<esc><right>%a]<esc>%a
-    inoremap <C-]>{ {
-    inoremap <C-]>} {<esc><right>%a}<esc>%a
+    inoremap <M-(> (
+    inoremap <M-)> (<esc><right>%a)<esc>%a
+    inoremap <M-[> [
+    inoremap <M-]> [<esc><right>%a]<esc>%a
+    inoremap <M-{>{ {
+    inoremap <M-}>} {<esc><right>%a}<esc>%a
 else
-    " Mac Mappings
+    " MacVim Mappings
     inoremap <D-(> (
     inoremap <D-)> (<esc><right>%a)<esc>%a
     inoremap <D-[> [
