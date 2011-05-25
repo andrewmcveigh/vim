@@ -1,9 +1,9 @@
 " VimClojure Settings
 let vimclojure#WantNailgun = 1
 if os == "Linux"
-  let vimclojure#NailgunClient = $HOME . "/Dropbox/Config/dotfiles/.vim/bundle/vim-customizations/vimclojure-nailgun-client/ubuntu10.10/ng"
+  let vimclojure#NailgunClient = $HOME . "/Dropbox/Config/dotfiles/.vim/vimclojure-nailgun-client/ubuntu10.10/ng"
 elseif os == "Darwin"
-  let vimclojure#NailgunClient = $HOME . "/Dropbox/Config/dotfiles/.vim/bundle/vim-customizations/vimclojure-nailgun-client/ng"
+  let vimclojure#NailgunClient = $HOME . "/Dropbox/Config/dotfiles/.vim/vimclojure-nailgun-client/ng"
 endif
 let vimclojure#HighlightBuiltins = 1
 let vimclojure#ParenRainbow = 1
