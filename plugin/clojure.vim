@@ -1,9 +1,9 @@
 " VimClojure Settings
 let vimclojure#WantNailgun = 1
 if os == "Linux"
-  let vimclojure#NailgunClient = $HOME . "/Dropbox/Config/dotfiles/.vim/vimclojure-nailgun-client/ubuntu10.10/ng"
+  let vimclojure#NailgunClient = $HOME . "/Dropbox/Config/dotfiles/vim/vimclojure-nailgun-client/ubuntu10.10/ng"
 elseif os == "Darwin"
-  let vimclojure#NailgunClient = $HOME . "/Dropbox/Config/dotfiles/.vim/vimclojure-nailgun-client/ng"
+  let vimclojure#NailgunClient = $HOME . "/Dropbox/Config/dotfiles/vim/vimclojure-nailgun-client/ng"
 endif
 let vimclojure#HighlightBuiltins = 1
 let vimclojure#ParenRainbow = 1
@@ -33,3 +33,10 @@ function! s:NailGunStop()
     endif
 endfunction
 command! NailGunStop call <SID>NailGunStop()
+
+" toggle clojure line comments
+vmap <LEADER>// :s/\(^;\(.*$\)\)\\|\(^.*$\)/\=len(submatch(2))>0?submatch(2):";".submatch(3)/g<CR>:nohl<CR>
+nmap <LEADER>// V<LEADER>//
+imap <F5> :CakeReload<CR>
+nmap <F5> :CakeReload<CR>
+vmap <F5> :CakeReload<CR>
