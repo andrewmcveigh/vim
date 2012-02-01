@@ -1,10 +1,12 @@
 
 " Vundle setup {{{
 
-set rtp+=~/.vim/vundle
+set rtp+=~/.vim/bundle/vundle
 call vundle#rc()
 
 " Bundles {{{
+
+Bundle 'gmarik/vundle'
 
 Bundle 'AnsiEsc.vim'
 Bundle 'BufOnly.vim'

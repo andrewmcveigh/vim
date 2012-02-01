@@ -1,3 +1,0 @@
-[submodule "bundle/slimv.vim"]
-	path = bundle/slimv.vim
-	url = https://github.com/vim-scripts/slimv.vim.git
