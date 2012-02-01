@@ -18,12 +18,13 @@ Bundle 'indentpython.vim--nianyang'
 Bundle 'LaTeX-Suite-aka-Vim-LaTeX'
 Bundle 'Puppet-Syntax-Highlighting'
 Bundle 'reload.vim'
-Bundle 'Solarized'
 Bundle 'SuperTab-continued.'
 Bundle 'Tagbar'
 Bundle 'The-NERD-Commenter'
 Bundle 'The-NERD-tree'
 Bundle 'VimClojure'
+
+Bundle 'altercation/vim-colors-solarized.git'
 
 " Custom Bundles {{{
 
@@ -91,8 +92,7 @@ filetype indent on              " filetype indent on
 
 " Solarized options {{{
 
-let g:solarized_visibility="high"
-let g:solarized_contrast="high"
+let g:solarized_style="dark"
 
 " }}}
 
@@ -131,13 +131,6 @@ set guifont=Monaco:h13
 if has("gui_running")
     set transparency=10
     set colorcolumn=80
-endif
-
-" Make cursor more visible
-if &background == 'light'
-    hi Cursor term=bold ctermfg=White ctermbg=Black guifg=White guibg=Black gui=bold
-else
-    hi Cursor term=bold ctermfg=Black ctermbg=White guifg=Black guibg=White gui=bold
 endif
 
 " Improve autocomplete menu color

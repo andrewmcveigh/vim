@@ -33,9 +33,9 @@
     url = http://github.com/vim-scripts/Syntax-Highlighting.git
     ignore = untracked
 
-[submodule "bundle/Solarized"]
-    path = bundle/Solarized
-    url = http://github.com/vim-scripts/Solarized.git
+[submodule "bundle/vim-colors-solarized"]
+    path = bundle/vim-colors-solarized
+    url = http://github.com/vim-scripts/vim-colors-solarized.git
     ignore = untracked
 
 [submodule "bundle/SuperTab-continued."]
