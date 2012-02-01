@@ -93,6 +93,8 @@ filetype indent on              " filetype indent on
 " Solarized options {{{
 
 let g:solarized_style="dark"
+let g:solarized_contrast="normal"
+let g:solarized_visibility="low"
 
 " }}}
 
