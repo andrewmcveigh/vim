@@ -1,0 +1,2 @@
+
+setlocal lispwords+=defhandler,defroutes

@@ -1,1 +1,1 @@
-set wildignore-=*classes/*
+set wildignore-=*classes/*,classes,lib,lib/

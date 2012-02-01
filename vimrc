@@ -18,23 +18,22 @@ Bundle 'indentpython.vim--nianyang'
 Bundle 'Puppet-Syntax-Highlighting'
 Bundle 'LaTeX-Suite-aka-Vim-LaTeX'
 Bundle 'Tagbar'
-Bundle 'VimOrganizer'
 Bundle 'Gundo'
+Bundle 'AnsiEsc.vim'
+Bundle 'VimClojure'
+Bundle 'The-NERD-Commenter'
 
 " Custom Bundles {{{
-
-Bundle 'andrewmcveigh/vim-customizations'
-Bundle 'andrewmcveigh/vimclojure-bundle'
-Bundle 'andrewmcveigh/Command-T'
-Bundle 'andrewmcveigh/paredit.vim'
 
 " }}}
 
 " Bundles in exile {{{
 
+" Bundle 'andrewmcveigh/vim-customizations'
+" Bundle 'andrewmcveigh/Command-T'
+" Bundle 'andrewmcveigh/paredit.vim'
 " Bundle 'snipMate'
 " Bundle 'rails.vim'
-" Bundle 'LaTeX-Suite-aka-Vim-LaTeX'
 " Bundle 'cocoa.vim'
 " Bundle 'jQuery'
 " Bundle 'jslint.vim'
@@ -53,20 +52,16 @@ set shiftwidth=4                " default shift width 4
 set noautoindent                " auto indent off
 set nosmartindent               " smart indent off
 set expandtab                   " tabs render as spaces
-set number                      " line numbers on
-set guioptions-=l               " disable gui chrome
-set guioptions-=L               " "
-set guioptions-=r               " "
-set guioptions-=R               " "
-set guioptions-=b               " "
-set guioptions-=B               " "
-set guioptions-=T               " "
+set guioptions=                 " disable gui chrome
 set modeline                    " enable modelines
 set scrolloff=5                 " scroll offset 5 lines, I.E., keep 5 lines (minimum) above/below cursor
 set tags=tags;/                 " find tags file in current dir, or the next one up the tree
 set visualbell
-set hlsearch
+
 set incsearch
+set showmatch
+set hlsearch
+
 set spelllang=en_gb
 set listchars+=tab:»-,trail:·,eol:¶
 set list
@@ -74,16 +69,12 @@ set t_Co=256                    " 256 Terminal colors
 set background=dark
 set wildmenu
 set wildmode=full
-
-" }}}
-
-" Global plugin settings {{{
-
-" I just want paredit
-let g:slimv_loaded = 1
-let g:slimv_clojure_loaded = 1
-let b:did_indent = 1
-let b:current_syntax = 1
+if has("gui_running")
+    set undofile
+    set relativenumber          " relative line numbers
+else
+    set number                  " line numbers on
+endif
 
 " }}}
 
@@ -137,6 +128,7 @@ set guifont=Monaco:h13
 
 if has("gui_running")
     set transparency=10
+    set colorcolumn=80
 endif
 
 " Make cursor more visible
@@ -144,13 +136,6 @@ if &background == 'light'
     hi Cursor term=bold ctermfg=White ctermbg=Black guifg=White guibg=Black gui=bold
 else
     hi Cursor term=bold ctermfg=Black ctermbg=White guifg=Black guibg=White gui=bold
-endif
-
-" highlight red line segments that are > 120 chars long
-"highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-"match OverLength /\%121v.\+/
-if has("gui_running")
-    set colorcolumn=80
 endif
 
 " Improve autocomplete menu color
@@ -170,6 +155,8 @@ au BufRead,BufNewFile *.txt setlocal filetype=text
 
 " }}}
 
+au FocusLost * :wa
+
 " }}}
 
 " Supertab settings {{{
@@ -177,15 +164,6 @@ au BufRead,BufNewFile *.txt setlocal filetype=text
 let g:SuperTabDefaultCompletionTypeDiscovery = [ "&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>", ]
 "let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 let g:SuperTabLongestHighlight = 1
-
-" }}}
-
-" Vimrc settings {{{
-
-" Allows a per-directory .vimrc or .vim.custom
-if filereadable('.custom.vim')
-    source .custom.vim
-endif
 
 " }}}
 
@@ -214,6 +192,7 @@ set directory=~/.temp/swp//
 
 set wildignore+=lib/*,*.jar,*.war,*aspnet_client*,*.cache,*.dll,*.exe,*obj/*,*bin/*,*.jpg,*.png,*.swf,*.gif,*.bmp,*.pem
 set wildignore+=*.crt,*.keystore,*classes/*,*build/*,*dist/*,%temp%*,log*,Jit*,*.pyc,target/*
+set wildignore+=lib,build,classes,target
 
 " }}}
 
@@ -272,6 +251,25 @@ au InsertLeave * hi StatColor guibg=#95e454 guifg=black ctermbg=lightgreen cterm
 " }}}
 
 " Global functions {{{
+
+function! s:RunShellCommand(cmdline)
+  echo a:cmdline
+  let expanded_cmdline = a:cmdline
+  for part in split(a:cmdline, ' ')
+     if part[0] =~ '\v[%#<]'
+        let expanded_part = fnameescape(expand(part))
+        let expanded_cmdline = substitute(expanded_cmdline, part, expanded_part, '')
+     endif
+  endfor
+  botright new
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+  call setline(1, 'You entered:    ' . a:cmdline)
+  call setline(2, 'Expanded Form:  ' .expanded_cmdline)
+  call setline(3,substitute(getline(2),'.','=','g'))
+  execute '$read !'. expanded_cmdline
+  setlocal nomodifiable
+  1
+endfunction
 
 " The start of a int -> hex converter, works for small ints
 function! s:ToCssHex(a)
@@ -410,7 +408,23 @@ function! LoadProject()
     if filereadable('.custom.vim')
         exec "source .custom.vim"
     endif
-    exec "CommandTFlush"
+    "exec "CommandTFlush"
+endfunction
+
+function! ToggleRelativeNumber()
+    if &relativenumber
+        set number
+    else
+        set relativenumber
+    endif
+endfunction
+
+function! ToggleHlSearch()
+    if &hlsearch
+        set nohlsearch
+    else
+        set hlsearch
+    endif
 endfunction
 
 " }}}
@@ -425,6 +439,7 @@ command! -bar Hexmode call ToggleHex()
 command! Base64Decode call Base64Decode()
 command! PrettyPrintHTML call PrettyPrintHTML()
 command! -nargs=1 ToCssHex call <SID>ToCssHex(<args>)
+command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
 
 " }}}
 
@@ -435,10 +450,11 @@ let maplocalleader = ","
 
 nnoremap \ ,
 nnoremap <LEADER>,r :source $MYVIMRC<CR>
-nnoremap <LEADER>ff :CommandTFlush<CR>
-nnoremap <LEADER>t :CommandT<CR>
+"nnoremap <LEADER>ff :CommandTFlush<CR>
+"nnoremap <LEADER>t :CommandT<CR>
 nnoremap <LEADER>m :SplitMessage !cake midje<CR>
 nnoremap <LEADER>nt :NERDTree<CR>
+nnoremap <LEADER>int :cd ~/Dropbox/Projects/eu.interel<CR>:NERDTree<CR>:nohl<CR>
 vnoremap <LEADER>vg y :call VimGrepSelection("<C-R>"")<CR>
 nnoremap <LEADER>vg :call VimGrepInput()<CR>
 nnoremap <LEADER>vr :e ~/.vimrc<CR>
@@ -450,15 +466,39 @@ nnoremap <LEADER>cng :!cake ng<CR>
 nnoremap <LEADER>= <C-W>+
 nnoremap <LEADER>- <C-W>-
 cnoremap <M-BS> <C-w>
-nnoremap <F13> :call SaveSession()<CR>
-vnoremap <F13> :call SaveSession()<CR>
-inoremap <F13> :call SaveSession()<CR>
-cnoremap <F13> :call SaveSession()<CR>
-nnoremap <F14> :call LoadSession()<CR>
-vnoremap <F14> :call LoadSession()<CR>
-inoremap <F14> :call LoadSession()<CR>
-cnoremap <F14> :call LoadSession()<CR>
+noremap <F13> :call SaveSession()<CR>
+noremap <F14> :call LoadSession()<CR>
 nnoremap <silent> <esc> :nohl<return><esc>
+nnoremap <tab> %
+nnoremap d<tab> d%
+nnoremap c<tab> c%
+nnoremap y<tab> y%
+vnoremap <tab> %
+nnoremap j gj
+nnoremap k gk
+inoremap <F1> <ESC>
+nnoremap <F1> <ESC>
+vnoremap <F1> <ESC>
+inoremap jj <ESC>
+noremap  <F19> :call ToggleRelativeNumber()<CR>
+noremap  <F3> :call ToggleHlSearch()<CR>
+nnoremap ˙ <C-W>h
+nnoremap ¬ <C-W>l
+nnoremap ∆ <C-W>j
+nnoremap ˚ <C-W>k
+nnoremap Ó :bprevious<CR>
+nnoremap Ò :bnext<CR>
+nnoremap <LEADER>cp Vip:call NERDComment(1, 'toggle')<CR>
+
+nnoremap <D-–> 3<C-W>-
+" window vert smaller
+nnoremap <D-≠> 3<C-W>+
+" window vert bigger
+nnoremap <D-≤> 3<C-W><
+" window horiz smaller
+nnoremap <D-≥> 3<C-W>>
+" window horiz bigger
+
 
 " Move windows with arrow keys, or Command+hljk {{{
 
@@ -486,6 +526,15 @@ nnoremap <A-down> :tabnext<CR>
 nnoremap <A-up>   :tabprevious<CR>
 
 " }}}
+
+" }}}
+
+" Vimrc settings {{{
+
+" Allows a per-directory .vimrc or .vim.custom
+if filereadable('.custom.vim')
+    source .custom.vim
+endif
 
 " }}}
 
