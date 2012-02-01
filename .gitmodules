@@ -1,0 +1,84 @@
+[submodule "bundle/AnsiEsc.vim"]
+    path = bundle/AnsiEsc.vim
+    url = http://github.com/vim-scripts/AnsiEsc.vim.git
+    ignore = untracked
+
+[submodule "bundle/BufOnly.vim"]
+    path = bundle/BufOnly.vim
+    url = http://github.com/vim-scripts/BufOnly.vim.git
+    ignore = untracked
+
+[submodule "bundle/Conque-Shell"]
+    path = bundle/Conque-Shell
+    url = http://github.com/vim-scripts/Conque-Shell.git
+    ignore = untracked
+
+[submodule "bundle/DirDiff.vim"]
+    path = bundle/DirDiff.vim
+    url = http://github.com/vim-scripts/DirDiff.vim.git
+    ignore = untracked
+
+[submodule "bundle/Gundo"]
+    path = bundle/Gundo
+    url = http://github.com/vim-scripts/Gundo.git
+    ignore = untracked
+
+[submodule "bundle/LaTeX-Suite-aka-Vim-LaTeX"]
+    path = bundle/LaTeX-Suite-aka-Vim-LaTeX
+    url = http://github.com/vim-scripts/LaTeX-Suite-aka-Vim-LaTeX.git
+    ignore = untracked
+
+[submodule "bundle/Syntax-Highlighting"]
+    path = bundle/Syntax-Highlighting
+    url = http://github.com/vim-scripts/Syntax-Highlighting.git
+    ignore = untracked
+
+[submodule "bundle/Solarized"]
+    path = bundle/Solarized
+    url = http://github.com/vim-scripts/Solarized.git
+    ignore = untracked
+
+[submodule "bundle/SuperTab-continued."]
+    path = bundle/SuperTab-continued.
+    url = http://github.com/vim-scripts/SuperTab-continued..git
+    ignore = untracked
+
+[submodule "bundle/Tagbar"]
+    path = bundle/Tagbar
+    url = http://github.com/vim-scripts/Tagbar.git
+    ignore = untracked
+
+[submodule "bundle/The-NERD-Commenter"]
+    path = bundle/The-NERD-Commenter
+    url = http://github.com/vim-scripts/The-NERD-Commenter.git
+    ignore = untracked
+
+[submodule "bundle/The-NERD-tree"]
+    path = bundle/The-NERD-tree
+    url = http://github.com/vim-scripts/The-NERD-tree.git
+    ignore = untracked
+
+[submodule "bundle/VimClojure"]
+    path = bundle/VimClojure
+    url = http://github.com/vim-scripts/VimClojure.git
+    ignore = untracked
+
+[submodule "bundle/fugitive.vim"]
+    path = bundle/fugitive.vim
+    url = http://github.com/vim-scripts/fugitive.vim.git
+    ignore = untracked
+
+[submodule "bundle/indentpython.vim--nianyang"]
+    path = bundle/indentpython.vim--nianyang
+    url = http://github.com/vim-scripts/indentpython.vim--nianyang.git
+    ignore = untracked
+
+[submodule "bundle/reload.vim"]
+    path = bundle/reload.vim
+    url = http://github.com/vim-scripts/reload.vim.git
+    ignore = untracked
+
+[submodule "bundle/vundle"]
+    path = bundle/vundle
+    url = http://github.com/vim-scripts/vundle.git
+    ignore = untracked
