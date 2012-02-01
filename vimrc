@@ -6,22 +6,22 @@ call vundle#rc()
 
 " Bundles {{{
 
-Bundle 'Conque-Shell'
-Bundle 'reload.vim'
-Bundle 'DirDiff.vim'
-Bundle 'SuperTab-continued.'
-Bundle 'The-NERD-tree'
-Bundle 'Solarized'
-Bundle 'BufOnly.vim'
-Bundle 'fugitive.vim'
-Bundle 'indentpython.vim--nianyang'
-Bundle 'Puppet-Syntax-Highlighting'
-Bundle 'LaTeX-Suite-aka-Vim-LaTeX'
-Bundle 'Tagbar'
-Bundle 'Gundo'
 Bundle 'AnsiEsc.vim'
-Bundle 'VimClojure'
+Bundle 'BufOnly.vim'
+Bundle 'Conque-Shell'
+Bundle 'DirDiff.vim'
+Bundle 'fugitive.vim'
+Bundle 'Gundo'
+Bundle 'indentpython.vim--nianyang'
+Bundle 'LaTeX-Suite-aka-Vim-LaTeX'
+Bundle 'Puppet-Syntax-Highlighting'
+Bundle 'reload.vim'
+Bundle 'Solarized'
+Bundle 'SuperTab-continued.'
+Bundle 'Tagbar'
 Bundle 'The-NERD-Commenter'
+Bundle 'The-NERD-tree'
+Bundle 'VimClojure'
 
 " Custom Bundles {{{
 
