@@ -1,2 +1,2 @@
 
-setlocal lispwords+=defhandler,defroutes
+setlocal lispwords+=defhandler,defroutes,handler-case,handle,defhtml,deftest,with-redefs

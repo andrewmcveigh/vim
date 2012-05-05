@@ -23,8 +23,11 @@ Bundle 'Tagbar'
 Bundle 'The-NERD-Commenter'
 Bundle 'The-NERD-tree'
 Bundle 'VimClojure'
+Bundle 'VimOrganizer'
 
 Bundle 'altercation/vim-colors-solarized.git'
+Bundle 'programble/itchy.vim'
+Bundle 'sjl/clam.vim'
 
 " Custom Bundles {{{
 
@@ -60,11 +63,13 @@ set modeline                    " enable modelines
 set scrolloff=5                 " scroll offset 5 lines, I.E., keep 5 lines (minimum) above/below cursor
 set tags=tags;/                 " find tags file in current dir, or the next one up the tree
 set visualbell
+set noignorecase
 
 set incsearch
 set showmatch
 set hlsearch
 
+set nospell
 set spelllang=en_gb
 set listchars+=tab:»-,trail:·,eol:¶
 set list
@@ -98,7 +103,9 @@ let g:solarized_visibility="low"
 
 " }}}
 
-colorscheme solarized
+if has("gui_running")
+    colorscheme solarized
+endif
 
 " }}}
 
@@ -128,7 +135,7 @@ autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
 
 " Display settings {{{
 
-set guifont=Monaco:h13
+set guifont=Monaco:h12
 
 if has("gui_running")
     set transparency=10
@@ -152,7 +159,13 @@ au BufRead,BufNewFile *.txt setlocal filetype=text
 
 " }}}
 
-au FocusLost * :wa
+augroup BgHighlight
+    autocmd!
+    "autocmd WinEnter * set relativenumber
+    "autocmd WinLeave * set norelativenumber
+    autocmd WinLeave * hi LineNr guibg=#073642
+    "execute "colorscheme ".g:colors_name
+augroup END
 
 " }}}
 
@@ -187,9 +200,9 @@ set directory=~/.temp/swp//
 
 " Vim will ignore the following file/directory patterns {{{
 
-set wildignore+=lib/*,*.jar,*.war,*aspnet_client*,*.cache,*.dll,*.exe,*obj/*,*bin/*,*.jpg,*.png,*.swf,*.gif,*.bmp,*.pem
-set wildignore+=*.crt,*.keystore,*classes/*,*build/*,*dist/*,%temp%*,log*,Jit*,*.pyc,target/*
-set wildignore+=lib,build,classes,target
+set wildignore+=*.jar,*.war,*aspnet_client*,*.cache,*.dll,*.exe,*obj/*,*bin/*
+set wildignore+=*.jpg,*.png,*.swf,*.gif,*.bmp,*.pem,*.crt,*.keystore,*build/*
+set wildignore+=*dist/*,%temp%*,Jit*,*.pyc,target/*,lib,build,classes,target
 
 " }}}
 
@@ -226,6 +239,8 @@ function! InsertStatuslineColor(mode)
     hi StatColor guibg=#e454ba ctermbg=magenta
   elseif a:mode == 'v'
     hi StatColor guibg=#e454ba ctermbg=magenta
+  elseif a:mode == 'p'
+    hi StatColor guibg=#225522 guifg=black ctermbg=lightgreen ctermfg=black
   else
     hi StatColor guibg=red ctermbg=red
   endif
@@ -424,6 +439,31 @@ function! ToggleHlSearch()
     endif
 endfunction
 
+function! s:NumberTextObject(whole)
+    normal! v
+
+    while getline('.')[col('.')] =~# '\v[0-9]'
+        normal! l
+    endwhile
+
+    if a:whole
+        normal! o
+
+        while col('.') > 1 && getline('.')[col('.') - 2] =~# '\v[0-9]'
+            normal! h
+        endwhile
+    endif
+endfunction
+
+function! s:Quiet()
+    vnew
+    wincmd H
+    vnew
+    wincmd L
+    wincmd h
+    set fullscreen
+endfunction
+
 " }}}
 
 " Global commands {{{
@@ -437,6 +477,7 @@ command! Base64Decode call Base64Decode()
 command! PrettyPrintHTML call PrettyPrintHTML()
 command! -nargs=1 ToCssHex call <SID>ToCssHex(<args>)
 command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
+command! Quiet call s:Quiet()
 
 " }}}
 
@@ -446,10 +487,13 @@ let mapleader = ","
 let maplocalleader = ","
 
 nnoremap \ ,
+nnoremap ! :Clam 
+nnoremap Q :echo 'Stop typing "Q" when you mean ":"'<CR>
+nnoremap Y y$
 nnoremap <LEADER>,r :source $MYVIMRC<CR>
 "nnoremap <LEADER>ff :CommandTFlush<CR>
 "nnoremap <LEADER>t :CommandT<CR>
-nnoremap <LEADER>m :SplitMessage !cake midje<CR>
+"nnoremap <LEADER>m :SplitMessage !cake midje<CR>
 nnoremap <LEADER>nt :NERDTree<CR>
 nnoremap <LEADER>int :cd ~/Dropbox/Projects/eu.interel<CR>:NERDTree<CR>:nohl<CR>
 vnoremap <LEADER>vg y :call VimGrepSelection("<C-R>"")<CR>
@@ -474,11 +518,10 @@ vnoremap <tab> %
 nnoremap j gj
 nnoremap k gk
 inoremap <F1> <ESC>
-nnoremap <F1> <ESC>
-vnoremap <F1> <ESC>
-inoremap jj <ESC>
-noremap  <F19> :call ToggleRelativeNumber()<CR>
+noremap  <F1> :call ToggleRelativeNumber()<CR>
 noremap  <F3> :call ToggleHlSearch()<CR>
+noremap  <F7> :set spell!<CR>
+noremap  <F2> :New<CR>
 nnoremap ˙ <C-W>h
 nnoremap ¬ <C-W>l
 nnoremap ∆ <C-W>j
@@ -524,14 +567,60 @@ nnoremap <A-up>   :tabprevious<CR>
 
 " }}}
 
+" Insert mode numbers to shift row {{{
+
+"inoremap 1 !
+"inoremap ! 1
+"inoremap 2 @
+"inoremap @ 2
+"inoremap 3 #
+"inoremap # 3
+"inoremap 4 $
+"inoremap $ 4
+"inoremap 5 %
+"inoremap % 5
+"inoremap 6 ^
+"inoremap ^ 6
+"inoremap 7 &
+"inoremap & 7
+"inoremap 8 *
+"inoremap * 8
+"inoremap 9 (
+"inoremap ( 9
+"inoremap 0 )
+"inoremap ) 0
+
+" }}}
+
+" Colon -> Semicolon {{{
+
+"inoremap ; :
+"inoremap : ;
+
+" }}}
+
+" Number Text Objects {{{
+
+onoremap N :<c-u>call <SID>NumberTextObject(0)<cr>
+xnoremap N :<c-u>call <SID>NumberTextObject(0)<cr>
+onoremap aN :<c-u>call <SID>NumberTextObject(1)<cr>
+xnoremap aN :<c-u>call <SID>NumberTextObject(1)<cr>
+onoremap iN :<c-u>call <SID>NumberTextObject(1)<cr>
+xnoremap iN :<c-u>call <SID>NumberTextObject(1)<cr>
+
+" }}}
+
 " }}}
 
 " Vimrc settings {{{
 
 " Allows a per-directory .vimrc or .vim.custom
-if filereadable('.custom.vim')
-    source .custom.vim
-endif
+function! CustomVim()
+    if filereadable('.custom.vim')
+        source .custom.vim
+    endif
+endfunction
+au BufRead,BufNewFile * :call CustomVim()
 
 " }}}
 

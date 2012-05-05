@@ -19,6 +19,8 @@ nnoremap <LEADER>() ma%x``x
 
 nnoremap <LEADER>i( :call FindBracket()<CR>"zc%( <C-R>z)<ESC>%mz=%`za
 nnoremap <LEADER>i) :call FindBracket()<CR>"zc%(<C-R>z )<ESC>mz=%`zi
+nnoremap <LEADER>i9 :call FindBracket()<CR>"zc%( <C-R>z)<ESC>%mz=%`za
+nnoremap <LEADER>i0 :call FindBracket()<CR>"zc%(<C-R>z )<ESC>mz=%`zi
 nnoremap <LEADER>i[ :call FindBracket()<CR>"zc%[ <C-R>z]<ESC>%mz=%`za
 nnoremap <LEADER>i] :call FindBracket()<CR>"zc%[<C-R>z ]<ESC>mz=%`zi
 nnoremap <LEADER>i{ :call FindBracket()<CR>"zc%{ <C-R>z}<ESC>%mz=%`za
@@ -26,6 +28,8 @@ nnoremap <LEADER>i} :call FindBracket()<CR>"zc%{<C-R>z }<ESC>mz=%`zi
 
 nnoremap <LEADER>w( "zciw( <C-R>z)<ESC>%a
 nnoremap <LEADER>w) "zciw(<C-R>z )<ESC>i
+nnoremap <LEADER>w9 "zciw( <C-R>z)<ESC>%a
+nnoremap <LEADER>w0 "zciw(<C-R>z )<ESC>i
 nnoremap <LEADER>w[ "zciw[ <C-R>z]<ESC>%a
 nnoremap <LEADER>w] "zciw[<C-R>z ]<ESC>i
 nnoremap <LEADER>w{ "zciw{ <C-R>z}<ESC>%a
@@ -33,6 +37,8 @@ nnoremap <LEADER>w} "zciw{<C-R>z }<ESC>i
 
 vnoremap <LEADER>w( "zc( <C-R>z)<ESC>%a
 vnoremap <LEADER>w) "zc(<C-R>z )<ESC>i
+vnoremap <LEADER>i9 "zc( <C-R>z)<ESC>%a
+vnoremap <LEADER>i0 "zc(<C-R>z )<ESC>i
 vnoremap <LEADER>w[ "zc[ <C-R>z]<ESC>%a
 vnoremap <LEADER>w] "zc[<C-R>z ]<ESC>i
 vnoremap <LEADER>w{ "zc{ <C-R>z}<ESC>%a
