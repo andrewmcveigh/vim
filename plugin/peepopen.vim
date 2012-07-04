@@ -37,9 +37,10 @@ noremap <SID>Launch :call <SID>LaunchPeepOpenViaVim()<CR>
 "if !hasmapto('<Plug>PeepOpen')
 if !hasmapto(':PeepOpen')
   "map <unique> <silent> <Leader>p <Plug>PeepOpen
-  noremap <unique> <silent> <Leader>h :PeepOpen<CR>
-  noremap <unique> <silent> <Leader>t :vs<CR>:PeepOpen<CR>
-  noremap <unique> <silent> <Leader>n :sp<CR>:PeepOpen<CR>
+  "noremap <unique> <silent> <Leader>h :PeepOpen<CR>
+  "noremap <unique> <silent> <Leader>t :PeepOpen<CR>
+  "noremap <unique> <silent> <Leader>t :vs<CR>:PeepOpen<CR>
+  "noremap <unique> <silent> <Leader>n :sp<CR>:PeepOpen<CR>
 endif
 
 let &cpo = s:save_cpo

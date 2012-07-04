@@ -1,3 +1,4 @@
 set spell
 set spelllang=en_gb
-set textwidth=79
+set wrap
+"set textwidth=79

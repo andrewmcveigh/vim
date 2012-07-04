@@ -10,7 +10,6 @@ Bundle 'gmarik/vundle'
 
 Bundle 'AnsiEsc.vim'
 Bundle 'BufOnly.vim'
-Bundle 'Conque-Shell'
 Bundle 'DirDiff.vim'
 Bundle 'fugitive.vim'
 Bundle 'Gundo'
@@ -24,7 +23,10 @@ Bundle 'The-NERD-Commenter'
 Bundle 'The-NERD-tree'
 Bundle 'VimClojure'
 Bundle 'VimOrganizer'
+Bundle 'ctrlp.vim'
+Bundle 'linediff.vim'
 
+Bundle 'acx0/Conque-Shell'
 Bundle 'altercation/vim-colors-solarized.git'
 Bundle 'programble/itchy.vim'
 Bundle 'sjl/clam.vim'
@@ -83,6 +85,14 @@ if has("gui_running")
 else
     set number                  " line numbers on
 endif
+
+" }}}
+
+" Plugin settings {{{
+
+let g:ctrlp_working_path_mode = 0
+let g:ctrlp_max_height = 15
+let g:ctrlp_match_window_bottom = 1
 
 " }}}
 
@@ -156,6 +166,7 @@ au BufRead,BufNewFile *.mpl set filetype=mpl
 au BufRead,BufNewFile *.otl setlocal ft=vo foldlevel=0
 au BufRead,BufNewFile *.pp setlocal filetype=puppet
 au BufRead,BufNewFile *.txt setlocal filetype=text
+au BufRead,BufNewFile *.cljss setlocal filetype=clojure
 
 " }}}
 
@@ -203,6 +214,7 @@ set directory=~/.temp/swp//
 set wildignore+=*.jar,*.war,*aspnet_client*,*.cache,*.dll,*.exe,*obj/*,*bin/*
 set wildignore+=*.jpg,*.png,*.swf,*.gif,*.bmp,*.pem,*.crt,*.keystore,*build/*
 set wildignore+=*dist/*,%temp%*,Jit*,*.pyc,target/*,lib,build,classes,target
+set wildignore+=.DS_Store
 
 " }}}
 
@@ -464,6 +476,11 @@ function! s:Quiet()
     set fullscreen
 endfunction
 
+function! GotoProj(p)
+    exec "cd ~/Dropbox/Projects/".a:p
+    NERDTree
+endfunction
+
 " }}}
 
 " Global commands {{{
@@ -478,6 +495,7 @@ command! PrettyPrintHTML call PrettyPrintHTML()
 command! -nargs=1 ToCssHex call <SID>ToCssHex(<args>)
 command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
 command! Quiet call s:Quiet()
+command! RemoveImageSize %s/\(\(\[\[image:.*\)\)||.*\]\]/\1]]/gc
 
 " }}}
 
@@ -510,11 +528,11 @@ cnoremap <M-BS> <C-w>
 noremap <F13> :call SaveSession()<CR>
 noremap <F14> :call LoadSession()<CR>
 nnoremap <silent> <esc> :nohl<return><esc>
-nnoremap <tab> %
-nnoremap d<tab> d%
-nnoremap c<tab> c%
-nnoremap y<tab> y%
-vnoremap <tab> %
+nnoremap <BS> %
+nnoremap d<BS> d%
+nnoremap c<BS> c%
+nnoremap y<BS> y%
+vnoremap <BS> %
 nnoremap j gj
 nnoremap k gk
 inoremap <F1> <ESC>
@@ -529,6 +547,12 @@ nnoremap ˚ <C-W>k
 nnoremap Ó :bprevious<CR>
 nnoremap Ò :bnext<CR>
 nnoremap <LEADER>cp Vip:call NERDComment(1, 'toggle')<CR>
+
+nnoremap <LEADER>pp :call GotoProj("eu.interel/puppet-config-interel")<CR>
+nnoremap <LEADER>web :call GotoProj("eu.interel/com.interelgroup.webinars")<CR>
+nnoremap <LEADER>xwt :call GotoProj("eu.interel/xwiki-platform-watchlist-api")<CR>
+nnoremap <LEADER>pb :call GotoProj("com.andrewmcveigh/budgetplanner")<CR>
+nnoremap <LEADER>pdb :call GotoProj("com.dirtybrussels/koala")<CR>
 
 nnoremap <D-–> 3<C-W>-
 " window vert smaller

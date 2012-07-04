@@ -48,6 +48,8 @@ nnoremap <LEADER>r( ma%r)``r(
 nnoremap <LEADER>r[ ma%r]``r[
 nnoremap <LEADER>r{ ma%r}``r{
 
+"inoremap <C-9> <ESC>F("zd%i( <C-R>z)<ESC>%a
+
 
 function! FindNextBracketBackward(line_nr, column)
   call search('\v[\(\[\{]', 'b')
