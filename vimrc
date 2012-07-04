@@ -525,9 +525,9 @@ nnoremap <LEADER>cng :!cake ng<CR>
 nnoremap <LEADER>= <C-W>+
 nnoremap <LEADER>- <C-W>-
 cnoremap <M-BS> <C-w>
-noremap <F13> :call SaveSession()<CR>
-noremap <F14> :call LoadSession()<CR>
-nnoremap <silent> <esc> :nohl<return><esc>
+"noremap <F13> :call SaveSession()<CR>
+"noremap <F14> :call LoadSession()<CR>
+nnoremap <C-l> :nohl<CR><C-l>
 nnoremap <BS> %
 nnoremap d<BS> d%
 nnoremap c<BS> c%
@@ -539,13 +539,13 @@ inoremap <F1> <ESC>
 noremap  <F1> :call ToggleRelativeNumber()<CR>
 noremap  <F3> :call ToggleHlSearch()<CR>
 noremap  <F7> :set spell!<CR>
-noremap  <F2> :New<CR>
-nnoremap ˙ <C-W>h
-nnoremap ¬ <C-W>l
-nnoremap ∆ <C-W>j
-nnoremap ˚ <C-W>k
-nnoremap Ó :bprevious<CR>
-nnoremap Ò :bnext<CR>
+"noremap  <F2> :New<CR>
+"nnoremap ˙ <C-W>h
+"nnoremap ¬ <C-W>l
+"nnoremap ∆ <C-W>j
+"nnoremap ˚ <C-W>k
+"nnoremap Ó :bprevious<CR>
+"nnoremap Ò :bnext<CR>
 nnoremap <LEADER>cp Vip:call NERDComment(1, 'toggle')<CR>
 
 nnoremap <LEADER>pp :call GotoProj("eu.interel/puppet-config-interel")<CR>
@@ -570,24 +570,24 @@ nnoremap <up>    :wincmd k<CR>
 nnoremap <down>  :wincmd j<CR>
 nnoremap <right> :wincmd l<CR>
 nnoremap <left>  :wincmd h<CR>
-nnoremap <D-k>   :wincmd k<CR>
-nnoremap <D-j>   :wincmd j<CR>
-nnoremap <D-l>   :wincmd l<CR>
-nnoremap <D-h>   :wincmd h<CR>
+"nnoremap <D-k>   :wincmd k<CR>
+"nnoremap <D-j>   :wincmd j<CR>
+"nnoremap <D-l>   :wincmd l<CR>
+"nnoremap <D-h>   :wincmd h<CR>
 
 " }}}
 
 " Command-right/left to cycle buffers in a split {{{
 
-nnoremap <D-S-right> :bnext<CR>
-nnoremap <D-S-left>  :bprevious<CR>
+"nnoremap <D-S-right> :bnext<CR>
+"nnoremap <D-S-left>  :bprevious<CR>
 
 " }}}
 
 " Command-up/down to cycle tabs in a split {{{
 
-nnoremap <A-down> :tabnext<CR>
-nnoremap <A-up>   :tabprevious<CR>
+"nnoremap <A-down> :tabnext<CR>
+"nnoremap <A-up>   :tabprevious<CR>
 
 " }}}
 
@@ -625,12 +625,12 @@ nnoremap <A-up>   :tabprevious<CR>
 
 " Number Text Objects {{{
 
-onoremap N :<c-u>call <SID>NumberTextObject(0)<cr>
-xnoremap N :<c-u>call <SID>NumberTextObject(0)<cr>
-onoremap aN :<c-u>call <SID>NumberTextObject(1)<cr>
-xnoremap aN :<c-u>call <SID>NumberTextObject(1)<cr>
-onoremap iN :<c-u>call <SID>NumberTextObject(1)<cr>
-xnoremap iN :<c-u>call <SID>NumberTextObject(1)<cr>
+"onoremap N :<c-u>call <SID>NumberTextObject(0)<cr>
+"xnoremap N :<c-u>call <SID>NumberTextObject(0)<cr>
+"onoremap aN :<c-u>call <SID>NumberTextObject(1)<cr>
+"xnoremap aN :<c-u>call <SID>NumberTextObject(1)<cr>
+"onoremap iN :<c-u>call <SID>NumberTextObject(1)<cr>
+"xnoremap iN :<c-u>call <SID>NumberTextObject(1)<cr>
 
 " }}}
 
