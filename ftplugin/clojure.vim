@@ -99,12 +99,20 @@ function! s:ReplFileCmd(file, cmd)
     return vimclojure#ExecuteNailWithInput("Repl", join(content + a:cmd, "\n"), "-r")
 endfunction
 
-function! s:RunJetty(service, port)
-    echo <SID>ReplFileCmd(
-                \ findfile("servlet.clj", getcwd() . "/src**"),
-                \ readfile($HOME."/.vim/run_jetty.clj"))
+function! s:RunJetty(service, ...)
+    let svr = []
+    if a:0 > 0
+        let svr = ["(defonce server (org.eclipse.jetty.server.Server. ".a:1."))"]
+    else
+        let svr = ["(defonce server (org.eclipse.jetty.server.Server. 8080))"]
+    endif
+
+    let svr += readfile($HOME."/.vim/run_jetty.clj")
+    
+    echo <SID>ReplFileCmd(findfile("servlet.clj", getcwd() . "/src**"), svr)
 endfunction
-command! RunJetty call <SID>RunJetty('app', 8080)
+
+command! -nargs=? RunJetty call <SID>RunJetty('app', <f-args>)
 
 function! s:StopJetty(service, port)
     echo <SID>ReplFileCmd(findfile("servlet.clj", getcwd() . "/src**"), ['(.stop server)'])

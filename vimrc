@@ -18,18 +18,20 @@ Bundle 'LaTeX-Suite-aka-Vim-LaTeX'
 Bundle 'Puppet-Syntax-Highlighting'
 Bundle 'reload.vim'
 Bundle 'SuperTab-continued.'
-Bundle 'Tagbar'
 Bundle 'The-NERD-Commenter'
 Bundle 'The-NERD-tree'
 Bundle 'VimClojure'
 Bundle 'VimOrganizer'
 Bundle 'ctrlp.vim'
 Bundle 'linediff.vim'
+Bundle 'vim-orgmode'
 
 Bundle 'acx0/Conque-Shell'
 Bundle 'altercation/vim-colors-solarized.git'
 Bundle 'programble/itchy.vim'
 Bundle 'sjl/clam.vim'
+Bundle 'coderifous/textobj-word-column.vim'
+Bundle 'zmx/tagbar'
 
 " Custom Bundles {{{
 
@@ -206,6 +208,7 @@ let g:tex_flavor='latex'
 
 set backupdir=~/.temp/backup//
 set directory=~/.temp/swp//
+set undodir=~/.temp/undo//
 
 " }}}
 
@@ -533,8 +536,8 @@ nnoremap d<BS> d%
 nnoremap c<BS> c%
 nnoremap y<BS> y%
 vnoremap <BS> %
-nnoremap j gj
-nnoremap k gk
+"nnoremap j gj
+"nnoremap k gk
 inoremap <F1> <ESC>
 noremap  <F1> :call ToggleRelativeNumber()<CR>
 noremap  <F3> :call ToggleHlSearch()<CR>
@@ -548,11 +551,12 @@ noremap  <F7> :set spell!<CR>
 "nnoremap Ò :bnext<CR>
 nnoremap <LEADER>cp Vip:call NERDComment(1, 'toggle')<CR>
 
-nnoremap <LEADER>pp :call GotoProj("eu.interel/puppet-config-interel")<CR>
+nnoremap <LEADER>tb :TagbarToggle<CR>
+"nnoremap <LEADER>pp :call GotoProj("eu.interel/puppet-config-interel")<CR>
 nnoremap <LEADER>web :call GotoProj("eu.interel/com.interelgroup.webinars")<CR>
 nnoremap <LEADER>xwt :call GotoProj("eu.interel/xwiki-platform-watchlist-api")<CR>
-nnoremap <LEADER>pb :call GotoProj("com.andrewmcveigh/budgetplanner")<CR>
-nnoremap <LEADER>pdb :call GotoProj("com.dirtybrussels/koala")<CR>
+"nnoremap <LEADER>pb :call GotoProj("com.budgetplannr")<CR>
+"nnoremap <LEADER>pdb :call GotoProj("com.dirtybrussels/koala")<CR>
 
 nnoremap <D-–> 3<C-W>-
 " window vert smaller
@@ -644,7 +648,7 @@ function! CustomVim()
         source .custom.vim
     endif
 endfunction
-au BufRead,BufNewFile * :call CustomVim()
+au BufRead,BufNewFile,BufEnter * :call CustomVim()
 
 " }}}
 
