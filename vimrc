@@ -11,27 +11,39 @@ Bundle 'gmarik/vundle'
 Bundle 'AnsiEsc.vim'
 Bundle 'BufOnly.vim'
 Bundle 'DirDiff.vim'
-Bundle 'fugitive.vim'
 Bundle 'Gundo'
 Bundle 'indentpython.vim--nianyang'
 Bundle 'LaTeX-Suite-aka-Vim-LaTeX'
-Bundle 'Puppet-Syntax-Highlighting'
+"Bundle 'Puppet-Syntax-Highlighting'
 Bundle 'reload.vim'
 Bundle 'SuperTab-continued.'
 Bundle 'The-NERD-Commenter'
 Bundle 'The-NERD-tree'
-Bundle 'VimClojure'
-Bundle 'VimOrganizer'
+"Bundle 'VimClojure'
+"Bundle 'VimOrganizer'
 Bundle 'ctrlp.vim'
 Bundle 'linediff.vim'
 Bundle 'vim-orgmode'
+Bundle 'paredit.vim'
+Bundle 'nginx.vim'
+Bundle 'ack.vim'
 
-Bundle 'acx0/Conque-Shell'
+"Bundle 'acx0/Conque-Shell'
 Bundle 'altercation/vim-colors-solarized.git'
 Bundle 'programble/itchy.vim'
-Bundle 'sjl/clam.vim'
-Bundle 'coderifous/textobj-word-column.vim'
+"Bundle 'sjl/clam.vim'
+"Bundle 'coderifous/textobj-word-column.vim'
 Bundle 'zmx/tagbar'
+
+Bundle "rodjek/vim-puppet"
+Bundle "godlygeek/tabular"
+Bundle "scrooloose/syntastic"
+Bundle "tpope/vim-rsi.git"
+Bundle 'tpope/vim-fireplace.git'
+Bundle 'tpope/vim-classpath.git'
+Bundle 'tpope/vim-fugitive.git'
+Bundle 'guns/vim-clojure-static'
+Bundle 'bling/vim-airline'
 
 " Custom Bundles {{{
 
@@ -88,6 +100,10 @@ else
     set number                  " line numbers on
 endif
 
+" highlight eol whitespace
+highlight ExtraWhitespace ctermbg=red guibg=red
+autocmd Syntax * syn match ExtraWhitespace /\s\+$/
+
 " }}}
 
 " Plugin settings {{{
@@ -95,6 +111,14 @@ endif
 let g:ctrlp_working_path_mode = 0
 let g:ctrlp_max_height = 15
 let g:ctrlp_match_window_bottom = 1
+let g:ctrlp_by_filename = 0
+
+let g:paredit_shortmaps = 1
+
+let g:syntastic_check_on_open=1
+
+let NERDTreeHijackNetrw=1
+let g:solarized_hitrail = 1
 
 " }}}
 
@@ -147,15 +171,20 @@ autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
 
 " Display settings {{{
 
-set guifont=Monaco:h12
+"set guifont=Menlo:h12
+"set guifont=Linux\ Libertine\ Mono:h12
+"set guifont=Times:h12
+"set guifont=Monaco:h12
+set guifont=Envy\ Code\ R:h13
+set linespace=0
 
 if has("gui_running")
-    set transparency=10
+    set transparency=0
     set colorcolumn=80
 endif
 
 " Improve autocomplete menu color
-highlight Pmenu ctermbg=238 gui=bold
+highlight Pmenu ctermbg=238 gui=NONE
 
 " }}}
 
@@ -221,61 +250,61 @@ set wildignore+=.DS_Store
 
 " }}}
 
-" Statusline Magic {{{
+"" Statusline Magic {{{
 
-hi StatColor guibg=#95e454 guifg=black ctermbg=lightgreen ctermfg=black
-hi Modified guibg=orange guifg=black ctermbg=lightred ctermfg=black
+"hi StatColor guibg=#95e454 guifg=black ctermbg=lightgreen ctermfg=black
+"hi Modified guibg=orange guifg=black ctermbg=lightred ctermfg=black
 
-" Statusline functions {{{
+"" Statusline functions {{{
 
-function! MyStatusLine(mode)
-    let statusline=""
-    if a:mode == 'Enter'
-        let statusline.="%#StatColor#"
-    endif
-    let statusline.="\(%n\)\ %f\ "
-    if a:mode == 'Enter'
-        let statusline.="%*"
-    endif
-    let statusline.="%#Modified#%m"
-    if a:mode == 'Leave'
-        let statusline.="%*%r"
-    elseif a:mode == 'Enter'
-        let statusline.="%r%*"
-    endif
-    let statusline .= "\ (%l/%L,\ %c)\ %P%=%h%w\ %y\ [%{&encoding}:%{&fileformat}]\ \ "
-    return statusline
-endfunction
+"function! MyStatusLine(mode)
+    "let statusline=""
+    "if a:mode == 'Enter'
+        "let statusline.="%#StatColor#"
+    "endif
+    "let statusline.="\(%n\)\ %f\ "
+    "if a:mode == 'Enter'
+        "let statusline.="%*"
+    "endif
+    "let statusline.="%#Modified#%m"
+    "if a:mode == 'Leave'
+        "let statusline.="%*%r"
+    "elseif a:mode == 'Enter'
+        "let statusline.="%r%*"
+    "endif
+    "let statusline .= "\ (%l/%L,\ %c)\ %P%=%h%w\ %y\ [%{&encoding}:%{&fileformat}]\ \ "
+    "return statusline
+"endfunction
 
-function! InsertStatuslineColor(mode)
-  if a:mode == 'i'
-    hi StatColor guibg=orange ctermbg=lightred
-  elseif a:mode == 'r'
-    hi StatColor guibg=#e454ba ctermbg=magenta
-  elseif a:mode == 'v'
-    hi StatColor guibg=#e454ba ctermbg=magenta
-  elseif a:mode == 'p'
-    hi StatColor guibg=#225522 guifg=black ctermbg=lightgreen ctermfg=black
-  else
-    hi StatColor guibg=red ctermbg=red
-  endif
-endfunction 
+"function! InsertStatuslineColor(mode)
+  "if a:mode == 'i'
+    "hi StatColor guibg=orange ctermbg=lightred
+  "elseif a:mode == 'r'
+    "hi StatColor guibg=#e454ba ctermbg=magenta
+  "elseif a:mode == 'v'
+    "hi StatColor guibg=#e454ba ctermbg=magenta
+  "elseif a:mode == 'p'
+    "hi StatColor guibg=#225522 guifg=black ctermbg=lightgreen ctermfg=black
+  "else
+    "hi StatColor guibg=red ctermbg=red
+  "endif
+"endfunction 
 
-" }}}
+"" }}}
 
-set statusline=%!MyStatusLine('Enter')
+"set statusline=%!MyStatusLine('Enter')
 
-" Status line autocommands {{{
+"" Status line autocommands {{{
 
-au WinEnter * setlocal statusline=%!MyStatusLine('Enter')
-au WinLeave * setlocal statusline=%!MyStatusLine('Leave')
+"au WinEnter * setlocal statusline=%!MyStatusLine('Enter')
+"au WinLeave * setlocal statusline=%!MyStatusLine('Leave')
 
-au InsertEnter * call InsertStatuslineColor(v:insertmode)
-au InsertLeave * hi StatColor guibg=#95e454 guifg=black ctermbg=lightgreen ctermfg=black
+"au InsertEnter * call InsertStatuslineColor(v:insertmode)
+"au InsertLeave * hi StatColor guibg=#95e454 guifg=black ctermbg=lightgreen ctermfg=black
 
-" }}}
+"" }}}
 
-" }}}
+"" }}}
 
 " Global functions {{{
 
@@ -329,7 +358,7 @@ function! VimGrepInput()
 endfunction
 
 function! VimGrepSelection(value)
-    exec "vimgrep /".a:value."/g **/*.".expand("%:e")
+    exec "vimgrep /".a:value."/g src/**/*.".expand("%:e")
     exec "normal \<A-LEFT>\<A-LEFT>\<C-^>:cw\<CR>"
 endfunction
 
@@ -471,17 +500,35 @@ function! s:NumberTextObject(whole)
 endfunction
 
 function! s:Quiet()
-    vnew
-    wincmd H
-    vnew
-    wincmd L
-    wincmd h
+    "vnew
+    "wincmd H
+    "vnew
+    "wincmd L
+    "wincmd h
     set fullscreen
+    set columns=80
 endfunction
 
 function! GotoProj(p)
     exec "cd ~/Dropbox/Projects/".a:p
     NERDTree
+endfunction
+
+function! ToggleParedit()
+    if (g:paredit_mode == 1)
+        let g:paredit_mode = 0
+        echo "Paredit Off"
+    else
+        let g:paredit_mode = 1
+        echo "Paredit On"
+    endif
+endfunction
+
+function! FindReplace()
+    let dir = input("Directory: ")
+    let patt = input("Find: ")
+    let repl = input("Replace: ")
+    exec "!sed -i '' 's/".patt."/".repl."/g' `grep -r '".patt."' ".dir." -l`"
 endfunction
 
 " }}}
@@ -500,6 +547,8 @@ command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
 command! Quiet call s:Quiet()
 command! RemoveImageSize %s/\(\(\[\[image:.*\)\)||.*\]\]/\1]]/gc
 
+command! FindReplace call FindReplace()
+
 " }}}
 
 " Global mappings {{{
@@ -507,6 +556,8 @@ command! RemoveImageSize %s/\(\(\[\[image:.*\)\)||.*\]\]/\1]]/gc
 let mapleader = ","
 let maplocalleader = ","
 
+inoremap <D-/> ✓
+"nnoremap <SPACE><SPACE> :call vimclojure#EvalFile()<CR>
 nnoremap \ ,
 nnoremap ! :Clam 
 nnoremap Q :echo 'Stop typing "Q" when you mean ":"'<CR>
@@ -567,6 +618,10 @@ nnoremap <D-≤> 3<C-W><
 nnoremap <D-≥> 3<C-W>>
 " window horiz bigger
 
+noremap <F2> :call ToggleParedit()<CR>
+
+nnoremap <LEADER>== :%s/\s\+$//gc<CR>
+vnoremap <LEADER>=<SPACE> :s/\s\{2,\}/ /g<CR>gv=:nohl<CR>
 
 " Move windows with arrow keys, or Command+hljk {{{
 

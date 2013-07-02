@@ -46,12 +46,45 @@ vnoremap <LEADER>jsi "zcif (<C-R>z) {<CR>}<ESC>=i{O
 
 nnoremap <LEADER>rrr yiw(v%:s/<C-R>"//gc<LEFT><LEFT><LEFT>
 
+function! FindNextBracketBackward(line_nr, column)
+  call search('\v[\(\[\{]', 'b')
+  normal %
+  if getpos('.')[1] < a:line_nr || (getpos('.')[1] <= a:line_nr && col('.') < a:column)
+    normal %
+    call FindNextBracketBackward(a:line_nr, a:column)
+  endif
+endfunction
+
+function! FindBracket()
+    let line = getline('.')
+    let line_nr = getpos('.')[1]
+    let column = col('.')
+    " if not on a bracket
+    if index(['(',')','[',']','{','}'], line[column - 1]) <= -1
+        call FindNextBracketBackward(line_nr, column)
+    endif
+    nohl
+endfunction
+
 function! ExtractFunctionClj()
   let name = input("Name of new method: ")
   let params = input("Params to pass: ")
   call FindBracket()
   let space = empty(params) ? "" : " "
   silent exec "normal \"zc%(".name.space.params.")\<ESC>{o(defn ".name." [".params."]\<CR>\<C-R>z)\<CR>\<ESC>kvip=/(".name.space.params.")\<CR>"
+endfunction
+
+function! ExtractFunctionClj()
+  let name = input("Name of new method: ")
+  let params = input("Params to accept: ")
+  let pass = params
+  if (match(params, '[\[\{\}\]]') > -1)
+    let pass = input("Params to pass: ")
+    let params = substitute(params, '\s\([\[\{]\)', '\1', 'g')
+  endif
+  call FindBracket()
+  let space = empty(params) ? "" : " "
+  silent exec "normal v%\"zc(".name.space.pass.")\<ESC>%lmy[[O(defn ".name."[".params."\<ESC>[[%i\<CR>\<C-R>z)\<CR>\<ESC>kvip=`y"
 endfunction
 
 function! DefThisSExp()

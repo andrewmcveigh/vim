@@ -12,3 +12,4 @@ endfunction
 
 au BufNewFile,BufRead *.cljs call Cljs()
 au BufNewFile,BufRead *.clj call Clj()
+au BufNewFile,BufRead *.cljx call Clj()
