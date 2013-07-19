@@ -10,7 +10,7 @@
         [org.eclipse.jetty.util.resource Resource]
         [org.eclipse.jetty.webapp WebAppContext WebAppClassLoader])
 
-;(defonce server (Server. 80))
+(defonce server (Server. 8080))
 
 (let [path    (str "src/" (if (.exists (as-file "src/test/webapp")) "test" "main") "/webapp")
       context (WebAppContext. path "/")

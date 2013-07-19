@@ -8,3 +8,5 @@ syn region clojureFailComment start=";;; [F]:" end="\n"
 
 highlight link clojureTestFail Error
 highlight link clojureTestPass Boolean
+
+highlight! clojureParen  guifg=#204b56 guibg=#002b36 gui=Bold
