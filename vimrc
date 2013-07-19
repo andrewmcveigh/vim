@@ -10,13 +10,12 @@ Bundle 'gmarik/vundle'
 
 Bundle 'AnsiEsc.vim'
 Bundle 'BufOnly.vim'
-Bundle 'DirDiff.vim'
+"Bundle 'DirDiff.vim'
 Bundle 'Gundo'
 Bundle 'indentpython.vim--nianyang'
-Bundle 'LaTeX-Suite-aka-Vim-LaTeX'
+"Bundle 'LaTeX-Suite-aka-Vim-LaTeX'
 "Bundle 'Puppet-Syntax-Highlighting'
-Bundle 'reload.vim'
-Bundle 'SuperTab-continued.'
+"Bundle 'reload.vim'
 Bundle 'The-NERD-Commenter'
 Bundle 'The-NERD-tree'
 "Bundle 'VimClojure'
@@ -28,13 +27,13 @@ Bundle 'paredit.vim'
 Bundle 'nginx.vim'
 Bundle 'ack.vim'
 
-"Bundle 'acx0/Conque-Shell'
 Bundle 'altercation/vim-colors-solarized.git'
 Bundle 'programble/itchy.vim'
-"Bundle 'sjl/clam.vim'
-"Bundle 'coderifous/textobj-word-column.vim'
 Bundle 'zmx/tagbar'
-
+Bundle 'gerw/vim-latex-suite.git'
+Bundle 'michaelmitchell/DirDiff.vim.git'
+Bundle 'xolox/vim-misc.git'
+Bundle 'xolox/vim-reload.git'
 Bundle "rodjek/vim-puppet"
 Bundle "godlygeek/tabular"
 Bundle "scrooloose/syntastic"
@@ -44,6 +43,8 @@ Bundle 'tpope/vim-classpath.git'
 Bundle 'tpope/vim-fugitive.git'
 Bundle 'guns/vim-clojure-static'
 Bundle 'bling/vim-airline'
+Bundle 'ervandew/supertab'
+
 
 " Custom Bundles {{{
 
@@ -151,24 +152,6 @@ let os = substitute(system('uname'), "\n", "", "")
 
 " }}}
 
-" Omnifunc commands {{{
-
-autocmd FileType python set omnifunc=pythoncomplete#Complete
-autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
-autocmd FileType css set omnifunc=csscomplete#CompleteCSS
-
-" Ruby {{{
-
-autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
-autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
-autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
-autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
-
-" }}}
-
-" }}}
-
 " Display settings {{{
 
 "set guifont=Menlo:h12
@@ -213,8 +196,10 @@ augroup END
 
 " Supertab settings {{{
 
-let g:SuperTabDefaultCompletionTypeDiscovery = [ "&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>", ]
-"let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+let g:SuperTabDefaultCompletionTypeDiscovery = [ "&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-n>", ]
+"&omnifunc:<c-x><c-o>", ]
+let g:SuperTabDefaultCompletionType = "<c-x><c-u>"
+let g:SuperTabContextDefaultCompletionType = "<c-n>"
 let g:SuperTabLongestHighlight = 1
 
 " }}}
@@ -249,62 +234,6 @@ set wildignore+=*dist/*,%temp%*,Jit*,*.pyc,target/*,lib,build,classes,target
 set wildignore+=.DS_Store
 
 " }}}
-
-"" Statusline Magic {{{
-
-"hi StatColor guibg=#95e454 guifg=black ctermbg=lightgreen ctermfg=black
-"hi Modified guibg=orange guifg=black ctermbg=lightred ctermfg=black
-
-"" Statusline functions {{{
-
-"function! MyStatusLine(mode)
-    "let statusline=""
-    "if a:mode == 'Enter'
-        "let statusline.="%#StatColor#"
-    "endif
-    "let statusline.="\(%n\)\ %f\ "
-    "if a:mode == 'Enter'
-        "let statusline.="%*"
-    "endif
-    "let statusline.="%#Modified#%m"
-    "if a:mode == 'Leave'
-        "let statusline.="%*%r"
-    "elseif a:mode == 'Enter'
-        "let statusline.="%r%*"
-    "endif
-    "let statusline .= "\ (%l/%L,\ %c)\ %P%=%h%w\ %y\ [%{&encoding}:%{&fileformat}]\ \ "
-    "return statusline
-"endfunction
-
-"function! InsertStatuslineColor(mode)
-  "if a:mode == 'i'
-    "hi StatColor guibg=orange ctermbg=lightred
-  "elseif a:mode == 'r'
-    "hi StatColor guibg=#e454ba ctermbg=magenta
-  "elseif a:mode == 'v'
-    "hi StatColor guibg=#e454ba ctermbg=magenta
-  "elseif a:mode == 'p'
-    "hi StatColor guibg=#225522 guifg=black ctermbg=lightgreen ctermfg=black
-  "else
-    "hi StatColor guibg=red ctermbg=red
-  "endif
-"endfunction 
-
-"" }}}
-
-"set statusline=%!MyStatusLine('Enter')
-
-"" Status line autocommands {{{
-
-"au WinEnter * setlocal statusline=%!MyStatusLine('Enter')
-"au WinLeave * setlocal statusline=%!MyStatusLine('Leave')
-
-"au InsertEnter * call InsertStatuslineColor(v:insertmode)
-"au InsertLeave * hi StatColor guibg=#95e454 guifg=black ctermbg=lightgreen ctermfg=black
-
-"" }}}
-
-"" }}}
 
 " Global functions {{{
 
@@ -679,17 +608,6 @@ nnoremap <left>  :wincmd h<CR>
 
 "inoremap ; :
 "inoremap : ;
-
-" }}}
-
-" Number Text Objects {{{
-
-"onoremap N :<c-u>call <SID>NumberTextObject(0)<cr>
-"xnoremap N :<c-u>call <SID>NumberTextObject(0)<cr>
-"onoremap aN :<c-u>call <SID>NumberTextObject(1)<cr>
-"xnoremap aN :<c-u>call <SID>NumberTextObject(1)<cr>
-"onoremap iN :<c-u>call <SID>NumberTextObject(1)<cr>
-"xnoremap iN :<c-u>call <SID>NumberTextObject(1)<cr>
 
 " }}}
 
