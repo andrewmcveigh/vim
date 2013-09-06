@@ -9,27 +9,28 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 Bundle 'AnsiEsc.vim'
-Bundle 'BufOnly.vim'
+"Bundle 'BufOnly.vim'
 "Bundle 'DirDiff.vim'
 Bundle 'Gundo'
-Bundle 'indentpython.vim--nianyang'
+"Bundle 'indentpython.vim--nianyang'
 "Bundle 'LaTeX-Suite-aka-Vim-LaTeX'
 "Bundle 'Puppet-Syntax-Highlighting'
 "Bundle 'reload.vim'
 Bundle 'The-NERD-Commenter'
-Bundle 'The-NERD-tree'
+"Bundle 'The-NERD-tree'
 "Bundle 'VimClojure'
 "Bundle 'VimOrganizer'
-Bundle 'ctrlp.vim'
 Bundle 'linediff.vim'
 Bundle 'vim-orgmode'
 Bundle 'paredit.vim'
 Bundle 'nginx.vim'
 Bundle 'ack.vim'
 
+Bundle 'scrooloose/nerdtree.git'
+Bundle 'kien/ctrlp.vim.git'
 Bundle 'altercation/vim-colors-solarized.git'
 Bundle 'programble/itchy.vim'
-Bundle 'zmx/tagbar'
+"Bundle 'zmx/tagbar'
 Bundle 'gerw/vim-latex-suite.git'
 Bundle 'michaelmitchell/DirDiff.vim.git'
 Bundle 'xolox/vim-misc.git'
@@ -43,8 +44,17 @@ Bundle 'tpope/vim-classpath.git'
 Bundle 'tpope/vim-fugitive.git'
 Bundle 'guns/vim-clojure-static'
 Bundle 'bling/vim-airline'
-Bundle 'ervandew/supertab'
+"Bundle 'ervandew/supertab'
+Bundle 'kchmck/vim-coffee-script.git'
+Bundle 'Valloric/YouCompleteMe'
 
+set complete=.,b,u,]
+"set wildmode=longest,list:longest
+"set completeopt=menu,preview
+set completeopt=menu
+let g:ycm_cache_omnifunc = 0
+let g:ycm_semantic_triggers = { 'clojure' : [] }
+let g:ycm_key_invoke_completion = '<PageDown>'
 
 " Custom Bundles {{{
 
@@ -116,7 +126,7 @@ let g:ctrlp_by_filename = 0
 
 let g:paredit_shortmaps = 1
 
-let g:syntastic_check_on_open=1
+let g:syntastic_check_on_open=0
 
 let NERDTreeHijackNetrw=1
 let g:solarized_hitrail = 1
@@ -158,8 +168,12 @@ let os = substitute(system('uname'), "\n", "", "")
 "set guifont=Linux\ Libertine\ Mono:h12
 "set guifont=Times:h12
 "set guifont=Monaco:h12
-set guifont=Envy\ Code\ R:h13
+"set guifont=Envy\ Code\ R:h13
+set guifont=Envy\ Code\ R\ for\ Powerline:h13
+"set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h12
+"set guifont=Meslo\ LG\ S\ DZ\ Regular\ for\ Powerline:h12
 set linespace=0
+let g:airline_powerline_fonts = 1
 
 if has("gui_running")
     set transparency=0
@@ -196,11 +210,11 @@ augroup END
 
 " Supertab settings {{{
 
-let g:SuperTabDefaultCompletionTypeDiscovery = [ "&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-n>", ]
-"&omnifunc:<c-x><c-o>", ]
-let g:SuperTabDefaultCompletionType = "<c-x><c-u>"
-let g:SuperTabContextDefaultCompletionType = "<c-n>"
-let g:SuperTabLongestHighlight = 1
+"let g:SuperTabDefaultCompletionTypeDiscovery = [ "&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-n>", ]
+""&omnifunc:<c-x><c-o>", ]
+"let g:SuperTabDefaultCompletionType = "<c-x><c-u>"
+"let g:SuperTabContextDefaultCompletionType = "<c-n>"
+"let g:SuperTabLongestHighlight = 1
 
 " }}}
 
@@ -515,6 +529,7 @@ nnoremap <BS> %
 nnoremap d<BS> d%
 nnoremap c<BS> c%
 nnoremap y<BS> y%
+nnoremap =<BS> =%
 vnoremap <BS> %
 "nnoremap j gj
 "nnoremap k gk

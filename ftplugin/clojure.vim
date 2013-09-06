@@ -2,12 +2,12 @@
 " VimClojure Settings {{{
 
 "let vimclojure#WantNailgun = 1
-let vimclojure#UseErrorBuffer = 1
-let vimclojure#NailgunClient = $HOME . "/Dropbox/Config/dotfiles/vim/vimclojure-nailgun-client/ng"
-let vimclojure#HighlightBuiltins = 1
-let vimclojure#ParenRainbow = 1
-let vimclojure#DynamicHighlighting = 1
-let vimclojure#SplitPos = "right"
+"let vimclojure#UseErrorBuffer = 1
+"let vimclojure#NailgunClient = $HOME . "/Dropbox/Config/dotfiles/vim/vimclojure-nailgun-client/ng"
+"let vimclojure#HighlightBuiltins = 1
+"let vimclojure#ParenRainbow = 1
+"let vimclojure#DynamicHighlighting = 1
+"let vimclojure#SplitPos = "right"
 "let vimclojure#SplitSize = 80
 
 "let g:clojure_align_multiline_strings = 1

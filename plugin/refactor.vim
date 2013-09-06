@@ -30,7 +30,7 @@ function! s:CommentOut()
   endif
 endfunction
 
-" vim: ts=2 sw=2 softtabstop=2 et 
+" vim: ts=2 sw=2 softtabstop=2 et
 if !exists('g:ft_check')
   let g:ft_check = ""
 endif
@@ -45,6 +45,8 @@ vnoremap <LEADER>jsb "zc{<CR><C-R>z}<ESC>=i{bi
 vnoremap <LEADER>jsi "zcif (<C-R>z) {<CR>}<ESC>=i{O
 
 nnoremap <LEADER>rrr yiw(v%:s/<C-R>"//gc<LEFT><LEFT><LEFT>
+
+inoremap <D-[> <ESC>%mm%i[<ESC>`mla]<ESC>%a<SPACE><ESC>i
 
 function! FindNextBracketBackward(line_nr, column)
   call search('\v[\(\[\{]', 'b')
@@ -86,6 +88,234 @@ function! ExtractFunctionClj()
   let space = empty(params) ? "" : " "
   silent exec "normal v%\"zc(".name.space.pass.")\<ESC>%lmy[[O(defn ".name."[".params."\<ESC>[[%i\<CR>\<C-R>z)\<CR>\<ESC>kvip=`y"
 endfunction
+
+let s:last_letted_form = ""
+let s:last_letted_symbol = ""
+
+function! refactor#kill_pair()
+  let g:paredit_mode = 0
+  let pos = getpos('.')
+  normal %x
+  call setpos('.', pos)
+  normal x
+  let g:paredit_mode = 1
+endfunction
+
+function! refactor#replace_with_parens()
+  let g:paredit_mode = 0
+  let pos = getpos('.')
+  normal %r)
+  call setpos('.', pos)
+  normal r(
+  let g:paredit_mode = 1
+endfunction
+
+function! refactor#let_outer_form()
+  let s:last_letted_symbol = input("Name of symbol to let: ")
+  let binding = s:last_letted_symbol
+  if (match(binding, '[\[\{\}\]]') > -1)
+    if (match(binding, '^.*:as\s\+\(\w\+\).*$') > -1)
+      let binding = substitute(binding, '^.*:as\s\+\(\w\+\).*$', '\1', 'g')
+    else
+      let binding = ""
+    endif
+  endif
+  call FindBracket()
+  exec "normal mzW\"tyi(`zalet[".s:last_letted_symbol."\<ESC>l>a\<CR>".binding."\<ESC>Jk$=%`z"
+  let s:last_letted_form = @t
+  echo s:last_letted_form
+endfunction
+
+function! refactor#is_in_let_block()
+  let curr_line = getline('.')
+  let column = col('.')
+  let curr_char = curr_line[column -1]
+  if curr_char == '(' && curr_line[column : column + 2] == 'let'
+    return 1
+  elseif curr_char == 'l' && curr_line[column : column + 1] == 'et'
+    return 2
+  else
+    let pos = getpos('.')
+    call search('let', 'b')
+    call search('[(\{\[]', 'b')
+    let let_pos = getpos('.')
+    normal %
+    let let_end_pos = getpos('.')
+    call setpos('.', pos)
+    if let_end_pos[1] > pos[1]
+      return 3
+    elseif let_end_pos[1] == pos[1] && let_end_pos[2] >= pos[2]
+      return 3
+    else
+      return 0
+    endif
+  endif
+endfunction
+
+function! refactor#jump_to_let(let_value)
+  if a:let_value == 2
+    normal h
+  elseif a:let_value == 3
+    call search('let', 'b')
+    call search('[(\{\[]', 'b')
+  endif
+endfunction
+
+function! refactor#join_til_same_line ()
+  let s = getpos('.')
+  normal %
+  let e = getpos('.')
+  if s[1] != e[1]
+    if s[1] < e[1]
+      call setpos('.', s)
+      normal J
+      call setpos('.', s)
+      call refactor#join_til_same_line()
+    else
+      call setpos('.', e)
+      normal J
+      call setpos('.', e)
+      call refactor#join_til_same_line()
+    endif
+  else
+    if s[2] <= e[2]
+      call setpos('.', s)
+    else 
+      call setpos('.', e)
+    endif
+  endif
+endfunction
+
+function! refactor#slurp_bracket(bracket_char)
+  call refactor#kill_pair()
+  normal h
+  call refactor#replace_with_parens()
+  normal l
+  let pos = getpos('.')
+  normal d%
+  let tmp = @"
+  normal =%
+  call setpos('.', pos)
+  normal vi(x
+  let inner_text = split(@", '\v[\r\n]+')
+  call refactor#join_til_same_line()
+  let start_bracket_pos = getpos('.')
+  let lines = []
+  for l in inner_text
+    let lines += [substitute(substitute(l, '\v^\s+', '', 'g'), s:last_letted_form, s:last_letted_symbol, 'g')]
+  endfor
+  let @" = join(lines, "\n")
+  execute "normal a".a:bracket_char."\<ESC>p"
+  call setpos('.', start_bracket_pos)
+  let @" = tmp
+  normal pa
+  normal =%
+  call setpos('.', start_bracket_pos)
+endfunction
+
+function! refactor#is_after(pos, is_after)
+  if ((a:pos[1] == a:is_after[1] && a:pos[2] <= a:is_after[2]) || (a:pos[1] < a:is_after[1]))
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
+function! refactor#is_before(pos, is_before)
+  if ((a:pos[1] == a:is_before[1] && a:pos[2] >= a:is_before[2]) || (a:pos[1] > a:is_before[1]))
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
+function! refactor#is_within(pos_a, pos_b, test)
+  if refactor#is_after(a:pos_a, a:test) == 1 && refactor#is_before(a:pos_b, a:test) == 1
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
+function! refactor#get_comments(pos_a, pos_b, comments)
+  let comms = a:comments
+  let next_comment = search('\v\s+;.*$')
+  if next_comment > 0
+    let pos = getpos('.')
+    if refactor#is_within(a:pos_a, a:pos_b, pos)
+      normal D
+      return refactor#get_comments(a:pos_a, a:pos_b, a:comments + [[pos, @"]])
+    else
+      return a:comments
+    endif
+  else
+    return a:comments
+  endif
+endfunction
+
+function! refactor#strip_comments()
+  let return_pos = getpos('.')
+  let let_val = refactor#is_in_let_block()
+  call refactor#jump_to_let(let_val)
+  let start = getpos('.')
+  normal %
+  let end = getpos('.')
+  call setpos('.', start)
+  let comments = refactor#get_comments(start, end, [])
+  call setpos('.', return_pos)
+  return comments
+endfunction
+
+function! refactor#place_comments(comments)
+  let pos = getpos('.')
+  for com1 in a:comments
+    call setpos('.', com1[0])
+    let @" = com1[1]
+    normal $p
+  endfor
+  call setpos('.', pos)
+endfunction
+
+function! refactor#slurp_let_back()
+  let format_opts = &formatoptions
+  let &formatoptions = ""
+  let comments = refactor#strip_comments()
+  let curr_line = getline('.')
+  let column = col('.')
+  let curr_char = curr_line[column -1]
+  let let_val = refactor#is_in_let_block()
+  if let_val
+    call refactor#jump_to_let(let_val)
+    let pos = getpos('.')
+    let back_1_sym = getline('.')[col('.')-2]
+    if back_1_sym == '(' || back_1_sym == '[' || back_1_sym == '{'
+      call refactor#slurp_bracket(back_1_sym)
+    else
+      let @x = ""
+      normal lv%"xx<
+      let pos = getpos('.')
+      normal dib"xP
+      call refactor#jump_to_let(refactor#is_in_let_block())
+      let @" = substitute(@", s:last_letted_form, s:last_letted_symbol, 'g')
+      normal l%a"
+      normal kJJ
+    endif
+    call setpos('.', pos)
+    normal =%
+    call search('let')
+    normal h
+  endif
+  "call refactor#place_comments(comments)
+  let &formatoptions = format_opts
+endfunction
+
+function! refactor#barf_let_forward()
+  normal lv%"xdJxh=%>"xphhr^=%
+endfunction
+
+nmap <D-<> :call refactor#slurp_let_back()<CR>
+nmap <D->> :call refactor#barf_let_forward()<CR>
+nmap <LEADER>let :call refactor#let_outer_form()<CR>
 
 function! DefThisSExp()
   let name = input("Name of def: ")
@@ -143,4 +373,4 @@ function! ReorderParams(params)
 endfunction
 nmap <LEADER>rrp di(:call ReorderParams(@")<CR>
 
-" vim: ts=2 sw=2 softtabstop=2 et 
+" vim: ts=2 sw=2 softtabstop=2 et
